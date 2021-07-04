@@ -9,9 +9,14 @@ import (
 	"google.golang.org/api/option"
 )
 
-func Run() int64 {
+type Gmail struct {
+	Credential string
+	Token      string
+}
+
+func (g *Gmail) Get() int64 {
 	ctx := context.Background()
-	client := google.GetClient(ctx, "config/google-work-credentials.json", "config/google-work-token.json")
+	client := google.GetClient(ctx, g.Credential, g.Token)
 
 	srv, err := gmail.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {

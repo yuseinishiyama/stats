@@ -10,9 +10,11 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
-func Run() {
+type Spreadsheet struct {}
+
+func (s *Spreadsheet) Write(entry Entry) {
 	ctx := context.Background()
-	client := google.GetClient(ctx, "config/google-private-credentials.json", "config/google-private-token.json")
+	client := google.GetClient(ctx, "config/google-private-credential.json", "config/google-private-token.json")
 
 	srv, err := sheets.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
@@ -21,9 +23,9 @@ func Run() {
 
 	spreadsheetId := "1yG-Hzw4_U4wnEZMUToNGxb7v8_-Ab60BJrgTk6T4798"
 	vr := sheets.ValueRange{}
-	values := []interface{}{"A", "B", "C"}
+	values := []interface{}{entry.Timestamp, entry.MailInboxWork, entry.MailInboxPrivate}
 	vr.Values = append(vr.Values, values)
-	_, err = srv.Spreadsheets.Values.Append(spreadsheetId, "A1", &vr).ValueInputOption("RAW").Context(ctx).Do()
+	_, err = srv.Spreadsheets.Values.Append(spreadsheetId, "A1", &vr).ValueInputOption("USER_ENTERED").Context(ctx).Do()
 	if err != nil {
 		log.Fatalf("Unable to append data to sheet: %v", err)
 	}
