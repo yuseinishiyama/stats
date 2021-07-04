@@ -2,8 +2,10 @@ package main
 
 import (
 	"github.com/yuseinishiyama/stats/pkg/providers/email"
+	"github.com/yuseinishiyama/stats/pkg/writer"
 )
 
 func main() {
-	providers.Run()
+	_ = providers.Run()
+	writer.Run()
 }

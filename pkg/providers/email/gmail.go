@@ -2,7 +2,6 @@ package providers
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/yuseinishiyama/stats/pkg/google"
@@ -10,9 +9,9 @@ import (
 	"google.golang.org/api/option"
 )
 
-func Run() {
+func Run() int64 {
 	ctx := context.Background()
-	client := google.GetClient(ctx, "config/credentials.json", "config/token.json")
+	client := google.GetClient(ctx, "config/google-work-credentials.json", "config/google-work-token.json")
 
 	srv, err := gmail.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
@@ -24,5 +23,6 @@ func Run() {
 	if err != nil {
 		log.Fatalf("Unable to retrieve labels: %v", err)
 	}
-	fmt.Println(r.MessagesTotal)
+
+	return r.MessagesTotal
 }
