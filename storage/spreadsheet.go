@@ -23,7 +23,7 @@ func (s *Spreadsheet) Write(entry Entry) {
 
 	spreadsheetId := "1yG-Hzw4_U4wnEZMUToNGxb7v8_-Ab60BJrgTk6T4798"
 	vr := sheets.ValueRange{}
-	values := []interface{}{entry.Timestamp, entry.MailInboxWork, entry.MailInboxPrivate}
+	values := []interface{}{entry.Timestamp, entry.Key, entry.Value}
 	vr.Values = append(vr.Values, values)
 	_, err = srv.Spreadsheets.Values.Append(spreadsheetId, "A1", &vr).ValueInputOption("USER_ENTERED").Context(ctx).Do()
 	if err != nil {
