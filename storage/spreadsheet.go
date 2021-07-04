@@ -1,10 +1,10 @@
-package writer
+package storage
 
 import (
 	"context"
 	"log"
 
-	"github.com/yuseinishiyama/stats/pkg/google"
+	"github.com/yuseinishiyama/stats/google"
 
 	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"

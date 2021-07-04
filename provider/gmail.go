@@ -1,10 +1,10 @@
-package providers
+package provider
 
 import (
 	"context"
 	"log"
 
-	"github.com/yuseinishiyama/stats/pkg/google"
+	"github.com/yuseinishiyama/stats/google"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/option"
 )
