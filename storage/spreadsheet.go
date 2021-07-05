@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"log"
 
 	"github.com/yuseinishiyama/stats/google"
 
@@ -10,23 +9,28 @@ import (
 	"google.golang.org/api/sheets/v4"
 )
 
-type Spreadsheet struct {}
+type Spreadsheet struct {
+	ID         string
+	Credential string
+	Token      string
+}
 
-func (s *Spreadsheet) Write(entry Entry) {
-	ctx := context.Background()
-	client := google.GetClient(ctx, "config/google-private-credential.json", "config/google-private-token.json")
-
+func (s *Spreadsheet) Write(ctx context.Context, entry Entry) error {
+	config, err := google.GetConfig(s.Credential)
+	if err != nil {
+		return err
+	}
+	client, err := google.GetClient(ctx, config, s.Token)
+	if err != nil {
+		return err
+	}
 	srv, err := sheets.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
-		log.Fatalf("Unable to retrieve Sheets client: %v", err)
+		return err
 	}
-
-	spreadsheetId := "1yG-Hzw4_U4wnEZMUToNGxb7v8_-Ab60BJrgTk6T4798"
 	vr := sheets.ValueRange{}
 	values := []interface{}{entry.Timestamp, entry.Key, entry.Value}
 	vr.Values = append(vr.Values, values)
-	_, err = srv.Spreadsheets.Values.Append(spreadsheetId, "A1", &vr).ValueInputOption("USER_ENTERED").Context(ctx).Do()
-	if err != nil {
-		log.Fatalf("Unable to append data to sheet: %v", err)
-	}
+	_, err = srv.Spreadsheets.Values.Append(s.ID, "A1", &vr).ValueInputOption("USER_ENTERED").Context(ctx).Do()
+	return err
 }
