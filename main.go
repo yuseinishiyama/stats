@@ -1,18 +1,21 @@
+// gen-token config
+// put-token
+// run
+
 package main
 
 import (
-	"github.com/yuseinishiyama/stats/provider"
-	"github.com/yuseinishiyama/stats/storage"
+	"github.com/spf13/cobra"
+	"github.com/yuseinishiyama/stats/command"
 )
 
 func main() {
-	spreadsheet := storage.Spreadsheet{}
+	rootCmd := &cobra.Command{
+		Use: "stats",
+		Run: func(cmd *cobra.Command, args []string) {
+			command.Execute()
+		},
+	}
 
-	workGmail := &provider.Gmail{Credential: "config/google-work-credential.json", Token: "config/google-work-token.json"}
-	mailInboxWork := storage.NewMailInboxWorkEntry(workGmail.Get())
-	spreadsheet.Write(mailInboxWork)
-
-	privateGmail := &provider.Gmail{Credential: "config/google-private-credential.json", Token: "config/google-private-token.json"}
-	mailInboxPrivate := storage.NewMailInboxPrivateEntry(privateGmail.Get())
-	spreadsheet.Write(mailInboxPrivate)
+	rootCmd.Execute()
 }
