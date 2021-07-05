@@ -19,8 +19,8 @@ func Command() *cobra.Command {
 	rootCmd := rootCommand{}
 
 	cmd := &cobra.Command{
-		Use:   "gen-token",
-		Short: "generates tokens",
+		Use:   "stats",
+		Short: "reports personal statistics",
 		Run: func(cmd *cobra.Command, args []string) {
 			rootCmd.Execute()
 		},
