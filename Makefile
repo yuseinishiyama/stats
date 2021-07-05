@@ -5,7 +5,11 @@ SECURITY_GROUP=sg-01a08b06d78e63c7a
 
 build:
 	GOOS=linux go build -o artifact/stats
-	docker build .
+
+publish: build
+	docker build -t stats .
+	docker tag stats:latest 921647845311.dkr.ecr.eu-west-1.amazonaws.com/stats:latest
+	docker push 921647845311.dkr.ecr.eu-west-1.amazonaws.com/stats:latest
 
 run:
 	go run main.go

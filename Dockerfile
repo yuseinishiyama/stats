@@ -1,5 +1,5 @@
 FROM alpine:3.14
 
-COPY artifact/stats stats
+COPY artifact/stats bin/stats
 COPY config config
-CMD ./stats
+CMD stats
