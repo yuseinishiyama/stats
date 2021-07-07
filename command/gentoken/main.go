@@ -5,6 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/yuseinishiyama/stats/google"
+	"github.com/yuseinishiyama/stats/provider/pocket"
 )
 
 type genToken struct{}
@@ -29,5 +30,8 @@ func (g *genToken) Execute() {
 	}
 	if err := google.GenerateToken("config/google-private-credential.json", "config/google-private-token.json"); err != nil {
 		log.Fatalf("Failed to generate google token to private account: %v", err)
+	}
+	if err := pocket.GenerateToken("config/pocket-consumer-key", "config/pocket-token.json"); err != nil {
+		log.Fatalf("Failed to generate pocket token: %v", err)
 	}
 }
