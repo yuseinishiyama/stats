@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_event_rule" "this" {
   name                = "stats"
-  schedule_expression = "cron(0/5 * * * ? *)"
+  schedule_expression = "cron(0 * * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "this" {
