@@ -36,7 +36,6 @@ resource "aws_ecs_task_definition" "this" {
     efs_volume_configuration {
       file_system_id     = "fs-f64afdc2"
       root_directory     = "/config"
-
     }
   }
 }

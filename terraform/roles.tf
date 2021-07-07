@@ -34,9 +34,3 @@ resource "aws_iam_role" "task_execution" {
   assume_role_policy  = data.aws_iam_policy_document.assume_role.json
   managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
-
-resource "aws_iam_role" "event" {
-  name                = "ecsEventsRole"
-  assume_role_policy  = data.aws_iam_policy_document.assume_role.json
-  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceEventsRole"]
-}
