@@ -5,13 +5,17 @@ import "time"
 type Entry struct {
 	Timestamp int64
 	Key       string
-	Value     int64
+	Value     int
 }
 
-func NewMailInboxWorkEntry(value int64) Entry {
+func NewMailInboxWorkEntry(value int) Entry {
 	return Entry{time.Now().Unix(), "mail_inbox_work", value}
 }
 
-func NewMailInboxPrivateEntry(value int64) Entry {
+func NewMailInboxPrivateEntry(value int) Entry {
 	return Entry{time.Now().Unix(), "mail_inbox_private", value}
+}
+
+func NewReadItLaterEntry(value int) Entry {
+	return Entry{time.Now().Unix(), "read_it_later", value}
 }

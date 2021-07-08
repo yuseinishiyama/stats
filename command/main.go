@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/yuseinishiyama/stats/command/gentoken"
 	"github.com/yuseinishiyama/stats/provider"
+	"github.com/yuseinishiyama/stats/provider/pocket"
 	"github.com/yuseinishiyama/stats/storage"
 )
 
@@ -44,6 +45,9 @@ func (r *rootCommand) Execute() {
 	if err := r.updatePrivateGmail(); err != nil {
 		log.Fatalf("Failed to update private gmail inbox count: %v", err)
 	}
+	if err := r.updatePocket(); err != nil {
+		log.Fatalf("Failed to update pocket unread count: %v", err)
+	}
 }
 
 func (r *rootCommand) updateWorkGmail() error {
@@ -55,7 +59,7 @@ func (r *rootCommand) updateWorkGmail() error {
 	if err != nil {
 		return err
 	}
-	mailInboxWork := storage.NewMailInboxWorkEntry(*val)
+	mailInboxWork := storage.NewMailInboxWorkEntry(val)
 	return r.spreadsheet.Write(r.context, mailInboxWork)
 }
 
@@ -68,6 +72,19 @@ func (r *rootCommand) updatePrivateGmail() error {
 	if err != nil {
 		return err
 	}
-	mailInboxPrivate := storage.NewMailInboxPrivateEntry(*val)
+	mailInboxPrivate := storage.NewMailInboxPrivateEntry(val)
+	return r.spreadsheet.Write(r.context, mailInboxPrivate)
+}
+
+func (r *rootCommand) updatePocket() error {
+	pocket := &pocket.Pocket{
+		ConsumerKeyFile: "config/pocket-consumer-key",
+		TokenFile:       "config/pocket-token.json",
+	}
+	val, err := pocket.Get(r.context)
+	if err != nil {
+		return err
+	}
+	mailInboxPrivate := storage.NewReadItLaterEntry(val)
 	return r.spreadsheet.Write(r.context, mailInboxPrivate)
 }
