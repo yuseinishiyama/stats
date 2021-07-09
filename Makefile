@@ -4,6 +4,7 @@ PUBLIC_SUBNET2=subnet-014711872c4205e34
 SECURITY_GROUP=sg-01a08b06d78e63c7a
 
 build:
+	go build -o artifact/stats-host-arch
 	GOOS=linux go build -o artifact/stats
 
 publish: build
