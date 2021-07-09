@@ -30,14 +30,6 @@ resource "aws_ecs_task_definition" "this" {
   cpu                      = "256"
   memory                   = "512"
   container_definitions    = file("container.json")
-  volume {
-    name = "config"
-
-    efs_volume_configuration {
-      file_system_id     = "fs-f64afdc2"
-      root_directory     = "/config"
-    }
-  }
 }
 
 resource "aws_ecr_repository" "this" {
