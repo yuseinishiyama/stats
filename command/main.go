@@ -48,6 +48,9 @@ func (r *rootCommand) Execute() {
 	if err := r.updatePocket(); err != nil {
 		log.Fatalf("Failed to update pocket unread count: %v", err)
 	}
+	if err := r.updateSlack(); err != nil {
+		log.Fatalf("Failed to update slack saved item count: %v", err)
+	}
 }
 
 func (r *rootCommand) updateWorkGmail() error {
@@ -86,5 +89,15 @@ func (r *rootCommand) updatePocket() error {
 		return err
 	}
 	mailInboxPrivate := storage.NewReadItLaterEntry(val)
+	return r.spreadsheet.Write(r.context, mailInboxPrivate)
+}
+
+func (r *rootCommand) updateSlack() error {
+	slack := &provider.Slack{TokenFile: "config/slack-token"}
+	val, err := slack.Get()
+	if err != nil {
+		return err
+	}
+	mailInboxPrivate := storage.NewChatSavedEntry(val)
 	return r.spreadsheet.Write(r.context, mailInboxPrivate)
 }

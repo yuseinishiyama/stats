@@ -19,3 +19,7 @@ func NewMailInboxPrivateEntry(value int) Entry {
 func NewReadItLaterEntry(value int) Entry {
 	return Entry{time.Now().Unix(), "read_it_later", value}
 }
+
+func NewChatSavedEntry(value int) Entry {
+	return Entry{time.Now().Unix(), "chat_saved", value}
+}
