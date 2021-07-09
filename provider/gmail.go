@@ -13,22 +13,22 @@ type Gmail struct {
 	Token      string
 }
 
-func (g *Gmail) Get(ctx context.Context) (*int64, error) {
+func (g *Gmail) Get(ctx context.Context) (int, error) {
 	config, err := google.GetConfig(g.Credential)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 	client, err := google.GetClient(ctx, config, g.Token)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 	srv, err := gmail.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 	r, err := srv.Users.Labels.Get("me", "INBOX").Do()
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
-	return &r.MessagesTotal, nil
+	return int(r.MessagesTotal), nil
 }
