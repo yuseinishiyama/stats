@@ -40,16 +40,16 @@ func (r *rootCommand) Execute() {
 	}
 
 	if err := r.updateWorkGmail(); err != nil {
-		log.Fatalf("Failed to update work gmail inbox count: %v", err)
+		log.Printf("Failed to update work gmail inbox count: %v", err)
 	}
 	if err := r.updatePrivateGmail(); err != nil {
-		log.Fatalf("Failed to update private gmail inbox count: %v", err)
+		log.Printf("Failed to update private gmail inbox count: %v", err)
 	}
 	if err := r.updatePocket(); err != nil {
-		log.Fatalf("Failed to update pocket unread count: %v", err)
+		log.Printf("Failed to update pocket unread count: %v", err)
 	}
 	if err := r.updateSlack(); err != nil {
-		log.Fatalf("Failed to update slack saved item count: %v", err)
+		log.Printf("Failed to update slack saved item count: %v", err)
 	}
 }
 
