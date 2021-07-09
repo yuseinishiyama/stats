@@ -26,12 +26,12 @@ func Command() *cobra.Command {
 
 func (g *genToken) Execute() {
 	if err := google.GenerateToken("config/google-work-credential.json", "config/google-work-token.json"); err != nil {
-		log.Fatalf("Failed to generate google token to work account: %v", err)
+		log.Printf("Failed to generate google token to work account: %v", err)
 	}
 	if err := google.GenerateToken("config/google-private-credential.json", "config/google-private-token.json"); err != nil {
-		log.Fatalf("Failed to generate google token to private account: %v", err)
+		log.Printf("Failed to generate google token to private account: %v", err)
 	}
 	if err := pocket.GenerateToken("config/pocket-consumer-key", "config/pocket-token.json"); err != nil {
-		log.Fatalf("Failed to generate pocket token: %v", err)
+		log.Printf("Failed to generate pocket token: %v", err)
 	}
 }
