@@ -3,7 +3,7 @@ package storage
 import (
 	"context"
 
-	"github.com/yuseinishiyama/stats/google"
+	"github.com/yuseinishiyama/stats/pkg/google"
 
 	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"

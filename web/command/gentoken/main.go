@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/yuseinishiyama/stats/google"
-	"github.com/yuseinishiyama/stats/provider/pocket"
+	"github.com/yuseinishiyama/stats/pkg/google"
+	"github.com/yuseinishiyama/stats/pkg/provider/pocket"
 )
 
 type genToken struct{}

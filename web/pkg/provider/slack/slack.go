@@ -1,4 +1,4 @@
-package provider
+package slack
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-type Slack struct {
+type Client struct {
 	TokenFile string
 }
 
@@ -16,7 +16,7 @@ type Stars struct {
 	Items []interface{}
 }
 
-func (s Slack) Get() (int, error) {
+func (s Client) Get() (int, error) {
 	token, err := s.getToken(s.TokenFile)
 	if err != nil {
 		return 0, err
@@ -43,7 +43,7 @@ func (s Slack) Get() (int, error) {
 	return len(res.Items), nil
 }
 
-func (s Slack) getToken(file string) (string, error) {
+func (s Client) getToken(file string) (string, error) {
 	token, err := ioutil.ReadFile(file)
 	if err != nil {
 		return "", err

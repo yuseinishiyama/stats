@@ -1,19 +1,20 @@
-package provider
+package gmail
 
 import (
 	"context"
 
-	"github.com/yuseinishiyama/stats/google"
+	"github.com/yuseinishiyama/stats/pkg/google"
 	"google.golang.org/api/gmail/v1"
 	"google.golang.org/api/option"
 )
 
-type Gmail struct {
+type Client struct {
 	Credential string
 	Token      string
 }
 
-func (g *Gmail) Get(ctx context.Context) (int, error) {
+func (g *Client) Get() (int, error) {
+	ctx := context.Background()
 	config, err := google.GetConfig(g.Credential)
 	if err != nil {
 		return 0, err

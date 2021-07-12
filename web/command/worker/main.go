@@ -1,37 +1,36 @@
-package command
+package worker
 
 import (
 	"context"
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/yuseinishiyama/stats/command/gentoken"
-	"github.com/yuseinishiyama/stats/provider"
-	"github.com/yuseinishiyama/stats/provider/pocket"
-	"github.com/yuseinishiyama/stats/storage"
+	"github.com/yuseinishiyama/stats/pkg/provider/gmail"
+	"github.com/yuseinishiyama/stats/pkg/provider/pocket"
+	"github.com/yuseinishiyama/stats/pkg/provider/slack"
+	"github.com/yuseinishiyama/stats/pkg/storage"
 )
 
-type rootCommand struct {
+type worker struct {
 	spreadsheet *storage.Spreadsheet
 	context     context.Context
 }
 
 func Command() *cobra.Command {
-	rootCmd := rootCommand{}
+	worker := worker{}
 
 	cmd := &cobra.Command{
-		Use:   "stats",
-		Short: "reports personal statistics",
+		Use:   "worker",
+		Short: "collects personal statistics",
 		Run: func(cmd *cobra.Command, args []string) {
-			rootCmd.Execute()
+			worker.Execute()
 		},
 	}
 
-	cmd.AddCommand(gentoken.Command())
 	return cmd
 }
 
-func (r *rootCommand) Execute() {
+func (r *worker) Execute() {
 	r.context = context.Background()
 	r.spreadsheet = &storage.Spreadsheet{
 		ID:         "1yG-Hzw4_U4wnEZMUToNGxb7v8_-Ab60BJrgTk6T4798",
@@ -53,12 +52,12 @@ func (r *rootCommand) Execute() {
 	}
 }
 
-func (r *rootCommand) updateWorkGmail() error {
-	workGmail := &provider.Gmail{
+func (r *worker) updateWorkGmail() error {
+	client := &gmail.Client{
 		Credential: "config/google-work-credential.json",
 		Token:      "config/google-work-token.json",
 	}
-	val, err := workGmail.Get(r.context)
+	val, err := client.Get()
 	if err != nil {
 		return err
 	}
@@ -66,12 +65,12 @@ func (r *rootCommand) updateWorkGmail() error {
 	return r.spreadsheet.Write(r.context, mailInboxWork)
 }
 
-func (r *rootCommand) updatePrivateGmail() error {
-	privateGmail := &provider.Gmail{
+func (r *worker) updatePrivateGmail() error {
+	client := &gmail.Client{
 		Credential: "config/google-private-credential.json",
 		Token:      "config/google-private-token.json",
 	}
-	val, err := privateGmail.Get(r.context)
+	val, err := client.Get()
 	if err != nil {
 		return err
 	}
@@ -79,12 +78,12 @@ func (r *rootCommand) updatePrivateGmail() error {
 	return r.spreadsheet.Write(r.context, mailInboxPrivate)
 }
 
-func (r *rootCommand) updatePocket() error {
-	pocket := &pocket.Pocket{
-		ConsumerKeyFile: "config/pocket-consumer-key",
-		TokenFile:       "config/pocket-token.json",
+func (r *worker) updatePocket() error {
+	client := &pocket.Client{
+		ConsumerKey: "config/pocket-consumer-key",
+		Token:       "config/pocket-token.json",
 	}
-	val, err := pocket.Get(r.context)
+	val, err := client.Get()
 	if err != nil {
 		return err
 	}
@@ -92,9 +91,9 @@ func (r *rootCommand) updatePocket() error {
 	return r.spreadsheet.Write(r.context, mailInboxPrivate)
 }
 
-func (r *rootCommand) updateSlack() error {
-	slack := &provider.Slack{TokenFile: "config/slack-token"}
-	val, err := slack.Get()
+func (r *worker) updateSlack() error {
+	client := &slack.Client{TokenFile: "config/slack-token"}
+	val, err := client.Get()
 	if err != nil {
 		return err
 	}
