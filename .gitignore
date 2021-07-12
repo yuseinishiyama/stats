@@ -1,10 +1,8 @@
-artifact/
-config/
+stats
+web/config/*
 
 .terraform/
 *.tfstate.backup
 *.terraform.lock.hcl
 
 xcuserdata/
-
-!.keep
