@@ -13,7 +13,7 @@ resource "aws_cloudwatch_event_target" "this" {
     launch_type         = "FARGATE"
     platform_version    = "LATEST"
     task_count          = 1
-    task_definition_arn = aws_ecs_task_definition.this.arn
+    task_definition_arn = aws_ecs_task_definition.worker.arn
     network_configuration {
       subnets = ["subnet-dd3ccb87"]
       security_groups = ["sg-a44cdad9"]

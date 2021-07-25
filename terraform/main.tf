@@ -29,7 +29,7 @@ resource "aws_ecs_cluster" "this" {
   }
 }
 
-resource "aws_ecs_task_definition" "this" {
+resource "aws_ecs_task_definition" "worker" {
   family                   = "worker"
   task_role_arn            = aws_iam_role.task.arn
   execution_role_arn       = aws_iam_role.task_execution.arn
@@ -37,7 +37,18 @@ resource "aws_ecs_task_definition" "this" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
   memory                   = "512"
-  container_definitions    = file("container.json")
+  container_definitions    = file("containers/worker.json")
+}
+
+resource "aws_ecs_task_definition" "bot" {
+  family                   = "bot"
+  task_role_arn            = aws_iam_role.task.arn
+  execution_role_arn       = aws_iam_role.task_execution.arn
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  container_definitions    = file("containers/bot.json")
 }
 
 resource "aws_ecr_repository" "this" {
