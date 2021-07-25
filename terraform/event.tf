@@ -1,11 +1,11 @@
 resource "aws_cloudwatch_event_rule" "this" {
-  name                = "stats"
+  name                = "stats-worker"
   schedule_expression = "cron(0 0/12 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "this" {
-  rule      = "stats"
-  target_id = "stats"
+  target_id = "StatsWorker"
+  rule      = aws_cloudwatch_event_rule.this.name
   arn       = aws_ecs_cluster.this.arn
   # use auto-generated role. terraform managed role didn't work
   role_arn  = "arn:aws:iam::921647845311:role/ecsEventsRole"

@@ -20,7 +20,8 @@ provider "aws" {
 }
 
 resource "aws_ecs_cluster" "this" {
-  name = "mycluster"
+  # name "stats" didn't work for unknown reasons
+  name = "my-stats"
 
   setting {
     name  = "containerInsights"
@@ -29,7 +30,7 @@ resource "aws_ecs_cluster" "this" {
 }
 
 resource "aws_ecs_task_definition" "this" {
-  family                   = "stats"
+  family                   = "worker"
   task_role_arn            = aws_iam_role.task.arn
   execution_role_arn       = aws_iam_role.task_execution.arn
   network_mode             = "awsvpc"
