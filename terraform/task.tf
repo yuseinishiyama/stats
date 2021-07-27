@@ -47,6 +47,7 @@ resource "aws_apprunner_service" "bot" {
         start_command = "bot"
         runtime_environment_variables = {
           FB_VERIFY_TOKEN = var.fb_verify_token
+          FB_ACCESS_TOKEN = var.fb_access_token
         }
       }
       image_identifier      = "${aws_ecr_repository.this.repository_url}:latest"
@@ -57,5 +58,10 @@ resource "aws_apprunner_service" "bot" {
 
 variable "fb_verify_token" {
   description = "FB Messenger verification token"
+  type        = string
+}
+
+variable "fb_access_token" {
+  description = "FB Messenger acesss token"
   type        = string
 }
