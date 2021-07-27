@@ -23,3 +23,7 @@ func NewReadItLaterEntry(value int) Entry {
 func NewChatSavedEntry(value int) Entry {
 	return Entry{time.Now().Unix(), "chat_saved", value}
 }
+
+func NewMoodEntry(value int) Entry {
+	return Entry{time.Now().Unix(), "mood", value}
+}

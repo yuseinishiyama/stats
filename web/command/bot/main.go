@@ -2,17 +2,22 @@ package bot
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/spf13/cobra"
+	"github.com/yuseinishiyama/stats/pkg/storage"
 )
 
-type bot struct{}
+type bot struct {
+	spreadsheet *storage.Spreadsheet
+}
 
 func Command() *cobra.Command {
 	bot := bot{}
@@ -29,8 +34,13 @@ func Command() *cobra.Command {
 }
 
 func (i *bot) Execute() {
-	http.HandleFunc("/webhook", func(w http.ResponseWriter, r *http.Request) {
+	i.spreadsheet = &storage.Spreadsheet{
+		ID:         "1yG-Hzw4_U4wnEZMUToNGxb7v8_-Ab60BJrgTk6T4798",
+		Credential: "config/google-private-credential.json",
+		Token:      "config/google-private-token.json",
+	}
 
+	http.HandleFunc("/webhook", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
 			token := r.URL.Query().Get("hub.verify_token")
@@ -70,13 +80,13 @@ func (i *bot) handleMessage(w http.ResponseWriter, r *http.Request) error {
 
 	for _, entry := range message.Entry {
 		event := entry.Messaging[0]
-		if err = i.sendMessage(event.Sender.ID, event.Message.Text); err != nil {
-			fmt.Println(err)
+		if err = i.recordMood(event.Sender.ID, event.Message.Text); err != nil {
+			err = fmt.Errorf("some messages were not handled properly")
 		}
 	}
 
 	w.WriteHeader(200)
-	return nil
+	return err
 }
 
 func (i *bot) sendMessage(rec string, message string) error {
@@ -104,6 +114,38 @@ func (i *bot) sendMessage(rec string, message string) error {
 
 	if res.StatusCode != http.StatusOK {
 		return fmt.Errorf("failed to post message. status code: %v", res.StatusCode)
+	}
+
+	return nil
+}
+
+func (i *bot) recordMood(rec string, score string) error {
+	validationMsg := "Score must be integer between 1 and 5"
+	parserdScore, err := strconv.ParseInt(score, 0, 0)
+	if err != nil {
+		if err = i.sendMessage(rec, validationMsg); err != nil {
+			return err
+		}
+		return nil // recoverable error
+	}
+
+	if parserdScore < 1 || parserdScore > 5 {
+		if err = i.sendMessage(rec, validationMsg); err != nil {
+			return err
+		}
+		return nil // recoverable error
+	}
+
+	entry := storage.NewMoodEntry(int(parserdScore))
+	if err = i.spreadsheet.Write(context.Background(), entry); err != nil {
+		if err = i.sendMessage(rec, "Failed to record score on database"); err != nil {
+			return err
+		}
+		return nil // recoverable error
+	}
+
+	if err = i.sendMessage(rec, "ACK"); err != nil {
+		return err
 	}
 
 	return nil
