@@ -6,3 +6,5 @@ web/config/*
 *.terraform.lock.hcl
 
 xcuserdata/
+
+.env
