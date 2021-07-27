@@ -1,0 +1,3 @@
+apply:
+	./.env
+	terraform apply
