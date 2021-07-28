@@ -1,3 +1,4 @@
 apply:
-	./.env
+	@# export secrets to the running context
+	. ./.env
 	terraform apply
