@@ -23,7 +23,7 @@ resource "aws_cloudwatch_event_target" "worker" {
     network_configuration {
       subnets          = [data.aws_subnet.container.id]
       security_groups  = [data.aws_security_group.container.id]
-      assign_public_ip = false
+      assign_public_ip = true
     }
   }
 }
