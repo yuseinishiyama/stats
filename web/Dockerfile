@@ -1,5 +1,9 @@
-FROM alpine:3.14
+FROM golang:alpine AS builder
+WORKDIR /go/src/stats
+COPY . .
+RUN go build -o stats ./cmd/stats
 
-COPY artifact/stats bin/stats
+FROM alpine
+COPY --from=builder /go/src/stats/stats bin/stats
 COPY config config
 ENTRYPOINT ["stats"]

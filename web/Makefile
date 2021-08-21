@@ -1,5 +1,4 @@
 build:
-	GOOS=linux go build -o artifact/ ./cmd/stats
 	docker build -t stats .
 
 publish: build
