@@ -7,9 +7,12 @@ RUN go mod download
 COPY cmd cmd
 COPY command command
 COPY pkg pkg
-RUN CGO_ENABLED=0 go build ./cmd/stats
 
-FROM gcr.io/distroless/base
+ARG GOARCH
+ARG GOARM
+RUN GOARCH=${GOARCH} GOARM=${GOARM} CGO_ENABLED=0 go build ./cmd/stats
+
+FROM gcr.io/distroless/static
 COPY --from=builder /workspace/stats /bin
 COPY config config
 ENTRYPOINT ["stats"]
