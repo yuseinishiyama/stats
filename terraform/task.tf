@@ -27,7 +27,7 @@ resource "aws_apprunner_service" "bot" {
           FB_ACCESS_TOKEN = var.fb_access_token
         }
       }
-      image_identifier      = "${aws_ecr_repository.this.repository_url}:latest"
+      image_identifier      = "${aws_ecr_repository.this.repository_url}:amd64"
       image_repository_type = "ECR"
     }
   }

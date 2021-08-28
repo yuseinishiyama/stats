@@ -22,8 +22,8 @@ manifest:
 	docker manifest annotate $(IMAGE) $(IMAGE):arm64v7 --os linux --arch arm
 	docker manifest push $(IMAGE)
 
-run-worker: build
-	docker run --rm stats:latest worker
+run-worker: build-amd
+	docker run --rm stats:amd64 worker
 
-run-bot: build
-	docker run --rm --env-file .env -p 80:80 stats:latest bot
+run-bot: build-amd
+	docker run --rm --env-file .env -p 80:80 stats:amd64 bot
